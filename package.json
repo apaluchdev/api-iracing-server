@@ -1,0 +1,19 @@
+{
+  "name": "api-iracing-server",
+  "version": "1.0.0",
+  "description": "Backend server to access the iRacing api.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adrian Paluch",
+  "license": "ISC",
+  "dependencies": {
+    "applicationinsights": "^2.3.6",
+    "axios": "^1.2.0",
+    "crypto-js": "^4.1.1",
+    "express": "^4.18.2"
+  }
+}
