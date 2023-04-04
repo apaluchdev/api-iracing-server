@@ -20,7 +20,7 @@ app.get('/cars', async (req, res) => {
 
 app.get('/documentation', async (req, res) => {
     try {
-        let documentation = await irapi('https://members-ng.iracing.com/data');
+        let documentation = await irapi('https://members-ng.iracing.com/data/doc', false);
         res.send(documentation)
     }
     catch (error) {

@@ -26,7 +26,7 @@ async function authenticate() {
     cookieJar.myCookies = response.headers['set-cookie'];
 }
 
-export default async function request(url) {
+export default async function request(url, isAWSCached = true) {
     try {
         const response = await axiosInstance.get(url,
         {
@@ -38,6 +38,11 @@ export default async function request(url) {
         });
      
         // get the AWS cached link given by the iracing api
+        
+        if (!isAWSCached) {
+            return response.data;
+        }
+        
         let link = response.data.link
 
         // access the cached AWS link the API gives us
