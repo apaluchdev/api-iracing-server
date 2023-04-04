@@ -1,18 +1,13 @@
-import axios from 'axios'
+import axios from 'axios' // used for web requests
 import cryptoJS from 'crypto-js';
 
-const axiosInstance = createAxios();
+const axiosInstance = axios.create({withCredentials: true});
 const cookieJar = { myCookies: undefined }; 
 
-// login to the iracing-api
-await login(); 
+// authenticate to the official iracing api
+await authenticate(); 
 
-// Creates an instance of axios
-function createAxios() {
-    return axios.create({withCredentials: true});   
-}
-
-async function login() {
+async function authenticate() {
     let email = process.env.email;
     let password = process.env.iRSecret;
 
@@ -29,28 +24,28 @@ async function login() {
     console.log('Authentication Status: ' + response.status)
 
     cookieJar.myCookies = response.headers['set-cookie'];
-    let parsedCookieInfo = cookieJar.myCookies.toString().replace(/;/g,'\n');
-    console.log('Cookie Info:\n' + parsedCookieInfo);
 }
 
 export default async function request(url) {
     try {
-        // Read the cookie and set it in the headers
         const response = await axiosInstance.get(url,
         {
             headers: 
             {
+                // Set the session cookie retrieved earlier
                 cookie: cookieJar.myCookies
             }
         });
      
+        // get the AWS cached link given by the iracing api
         let link = response.data.link
 
-        // Access the cached AWS link the API gives us
+        // access the cached AWS link the API gives us
         const cachedResponse = await axiosInstance.get(link,         
         {
             headers: 
             {
+                // Set the session cookie retrieved earlier
                 cookie: cookieJar.myCookies
             }
         });
@@ -63,7 +58,7 @@ export default async function request(url) {
             // Attempt to re-authenticate
             await login();
 
-            // Wait 10 seconds between attempts to authenticate
+            // Wait between attempts to authenticate
             await new Promise(resolve => setTimeout(resolve, 5000));
 
             // re-attempt the request

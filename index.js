@@ -2,10 +2,10 @@ import express from 'express';
 import irapi from './iracing-api.js';
 
 const app = express()
-const port = process.env.PORT /* Use Azure's port environment variable if available */ || 3001
+const port = process.env.PORT || 3001
 
 app.get('/', (req, res) => {
-  res.send('Base URL')
+  res.send('iRacing API wrapper')
 })
 
 app.get('/cars', async (req, res) => {
@@ -14,7 +14,16 @@ app.get('/cars', async (req, res) => {
         res.send(cars)
     }
     catch (error) {
-        // TODO log error
+        res.send('Internal server error')
+    }
+})
+
+app.get('/documentation', async (req, res) => {
+    try {
+        let documentation = await irapi('https://members-ng.iracing.com/data');
+        res.send(documentation)
+    }
+    catch (error) {
         res.send('Internal server error')
     }
 })
@@ -25,7 +34,6 @@ app.get('/tracks', async (req, res) => {
         res.send(tracks)
     }
     catch (error) {
-        // TODO log error
         res.send('Internal server error')
     }
 })
